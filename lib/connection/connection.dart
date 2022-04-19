@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:siib_android/model/barang_keluar_model.dart';
+import 'package:siib_android/model/barang_model.dart';
 
 Future<String> getLocalIPConfig() async {
   const _secureStorage = FlutterSecureStorage();
@@ -22,7 +24,8 @@ void setJWTToken(String jwtString) async {
   await _secureStorage.write(key: 'jwt-token', value: jwtString);
 }
 
-Future<Map<String, dynamic>> getDataUser(BuildContext context) async {
+Future<Map<String, dynamic>> getDataUser(
+    BuildContext context, Map<String, TextEditingController> option) async {
   var _jwtToken = await getSavedJWTToken();
   var _ipVal = await getLocalIPConfig();
   var _payload = _jwtToken.split('.')[1];
@@ -47,7 +50,15 @@ Future<Map<String, dynamic>> getDataUser(BuildContext context) async {
   // print(response);
   if (response.statusCode == 200) {
     // print(response.body);
-    return jsonDecode(response.body);
+    var result = jsonDecode(response.body);
+    if (option.isNotEmpty) {
+      TextEditingController namaUserController = option['nama_user']!;
+      TextEditingController userNameController = option['username']!;
+
+      namaUserController.text = result['userdata']['nama_user'];
+      userNameController.text = result['userdata']['username'];
+    }
+    return result;
   } else {
     return <String, dynamic>{};
   }
@@ -79,8 +90,8 @@ void loginFunc(String username, String password, BuildContext context) async {
     }
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
-      print(result['jwt_token']);
-      print(result['user_agent']);
+      // print(result['jwt_token']);
+      // print(result['user_agent']);
       final jwtToken = result['jwt_token'];
       // await _secureStorage.write(key: 'jwt-token', value: jwtToken);
       setJWTToken(jwtToken);
@@ -104,5 +115,60 @@ void loginFunc(String username, String password, BuildContext context) async {
             Text('Harap masukan semua isian, dan pengaturan koneksi website'),
       ),
     );
+  }
+}
+
+Future<List<BarangModel>> getDataBarang(BuildContext context) async {
+  var _ipVal = await getLocalIPConfig();
+  var response;
+  try {
+    var _jwtToken = await getSavedJWTToken();
+    Map<String, String> requestHeader = {'Authorization': 'Bearer $_jwtToken'};
+    response = await http.post(
+      Uri.parse('http://$_ipVal/api/barang/daftar-barang'),
+      headers: requestHeader,
+      body: {'android': 'true'},
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+  }
+  if (response.statusCode == 200) {
+    var _result = jsonDecode(response.body);
+    List<BarangModel> list = [];
+    for (var item in _result['barang']) {
+      list.add(BarangModel.fromJson(item));
+    }
+    return list;
+  } else {
+    return [];
+  }
+}
+
+Future<List<BarangKeluarModel>> getDataBarangKeluar(
+    BuildContext context) async {
+  var _ipVal = await getLocalIPConfig();
+  var _response;
+  try {
+    var _jwtToken = await getSavedJWTToken();
+    Map<String, String> requestHeader = {'Authorization': 'Bearer $_jwtToken'};
+    _response = await http.post(
+      Uri.parse('http://$_ipVal/api/barang/keluar'),
+      headers: requestHeader,
+      body: {'android': 'true'},
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+  }
+  if (_response.statusCode == 200) {
+    var _result = jsonDecode(_response.body);
+    List<BarangKeluarModel> list = [];
+    for (var item in _result['barang_keluar']) {
+      list.add(BarangKeluarModel.fromJson(item));
+    }
+    return list;
+  } else {
+    return [];
   }
 }

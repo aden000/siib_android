@@ -13,8 +13,8 @@ class BarangModel {
 
   factory BarangModel.fromJson(Map<String, dynamic> json) {
     return BarangModel(
-      idBarang: json['id_barang'],
-      idKategoriBarang: json['id_kategori_barang'],
+      idBarang: int.parse(json['id_barang']),
+      idKategoriBarang: int.parse(json['id_kategori_barang']),
       namaBarang: json['nama_barang'],
       namaKategoriBarang: json['nama_kategori_barang'],
     );

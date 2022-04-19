@@ -70,17 +70,16 @@ class _DashboardState extends State<Dashboard> {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(10.0),
-        child: FutureBuilder(
-            future: getDashboardData(),
-            builder: (
-              BuildContext bc,
-              AsyncSnapshot<Map<String, dynamic>> snapshot,
-            ) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasData) {
-                  return Column(
+      body: FutureBuilder(
+          future: getDashboardData(),
+          builder: (
+            BuildContext bc,
+            AsyncSnapshot<Map<String, dynamic>> snapshot,
+          ) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData) {
+                return SingleChildScrollView(
+                  child: Column(
                     children: [
                       DashboardMenu(
                         icon: Icons.list_rounded,
@@ -103,37 +102,34 @@ class _DashboardState extends State<Dashboard> {
                         subtitle: 'Banyaknya terjadi barang keluar',
                       ),
                     ],
-                  );
-                } else {
-                  return Column(
-                    children: const [
-                      DashboardMenu(
-                        icon: Icons.list_rounded,
-                        title: ':(',
-                        subtitle: 'Tidak mendapat data...',
-                      ),
-                    ],
-                  );
-                }
-              } else {
-                return Container(
-                  alignment: Alignment.center,
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          const CircularProgressIndicator(),
-                          Container(
-                              margin: const EdgeInsets.only(left: 7.0),
-                              child: const Text("Loading...")),
-                        ],
-                      ),
-                    ],
                   ),
                 );
+              } else {
+                return Column(
+                  children: const [
+                    DashboardMenu(
+                      icon: Icons.list_rounded,
+                      title: ':(',
+                      subtitle: 'Tidak mendapat data..., mohon login',
+                    ),
+                  ],
+                );
               }
-            }),
-      ),
+            } else {
+              return Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CircularProgressIndicator(),
+                    Container(
+                      margin: const EdgeInsets.only(left: 7.0),
+                      child: const Text("Loading..."),
+                    ),
+                  ],
+                ),
+              );
+            }
+          }),
     );
   }
 }

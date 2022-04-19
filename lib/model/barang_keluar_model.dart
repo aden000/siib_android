@@ -1,22 +1,25 @@
 class BarangKeluarModel {
   final int idBarangKeluar;
-  final int idUnitKerja;
+  final String namaUnitKerja;
+  final String namaUser;
   final DateTime tanggalKeluar;
   final int status;
 
   BarangKeluarModel({
     required this.idBarangKeluar,
-    required this.idUnitKerja,
+    required this.namaUnitKerja,
+    required this.namaUser,
     required this.tanggalKeluar,
     required this.status,
   });
 
   factory BarangKeluarModel.fromJson(Map<String, dynamic> json) {
     return BarangKeluarModel(
-      idBarangKeluar: json['id_barang_keluar'],
-      idUnitKerja: json['id_unit_kerja'],
-      tanggalKeluar: json['tanggal_keluar'],
-      status: json['status'],
+      idBarangKeluar: int.parse(json['id_barang_keluar']),
+      namaUnitKerja: json['nama_unit_kerja'],
+      namaUser: json['nama_user'],
+      tanggalKeluar: DateTime.parse(json['tanggal_keluar']),
+      status: int.parse(json['status']),
     );
   }
 }
