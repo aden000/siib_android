@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:siib_android/connection/connection.dart';
 import 'package:siib_android/views/template/dashboard_card.dart';
 import 'package:siib_android/views/template/menu_card.dart';
 
@@ -18,7 +19,7 @@ class _SidebarState extends State<Sidebar> {
   var role = 0;
   var idUser = 0;
   var namaUser = '';
-  var currentRoute = '';
+  // var currentRoute = '';
 
   @override
   void initState() {
@@ -40,7 +41,7 @@ class _SidebarState extends State<Sidebar> {
       idUser = int.parse(payloadMap['id_user']);
       role = int.parse(payloadMap['role']);
       namaUser = payloadMap['nama_user'];
-      currentRoute = ModalRoute.of(context)!.settings.name!;
+      // currentRoute = ModalRoute.of(context)!.settings.name!;
     });
 
     return payloadMap;
@@ -49,7 +50,8 @@ class _SidebarState extends State<Sidebar> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
         children: [
           // FutureBuilder(
           //   future: getLocalSessionData(),
@@ -74,6 +76,9 @@ class _SidebarState extends State<Sidebar> {
           //     return a;
           //   },
           // ),
+          const SizedBox(
+            height: 30.0,
+          ),
           InkWell(
             onTap: () => Navigator.pushNamed(context, '/UserInfo'),
             child: DashboardMenu(
@@ -100,7 +105,16 @@ class _SidebarState extends State<Sidebar> {
             leading: const Icon(Icons.unarchive),
             onTap: () => Navigator.popAndPushNamed(context, '/BarangKeluar'),
             enabled: (role == 1 || role == 2),
-          )
+          ),
+          Expanded(
+              child: Align(
+            alignment: Alignment.bottomCenter,
+            child: ListTile(
+              title: const Text('Log out / Keluar Sistem'),
+              leading: const Icon(Icons.logout),
+              onTap: () => logoutFunc(context),
+            ),
+          ))
         ],
       ),
     );

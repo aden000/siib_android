@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:siib_android/model/barang_keluar_model.dart';
 import 'package:siib_android/model/barang_model.dart';
+import 'package:siib_android/model/detail_barang_model.dart';
 
 Future<String> getLocalIPConfig() async {
   const _secureStorage = FlutterSecureStorage();
@@ -24,8 +25,72 @@ void setJWTToken(String jwtString) async {
   await _secureStorage.write(key: 'jwt-token', value: jwtString);
 }
 
-Future<Map<String, dynamic>> getDataUser(
-    BuildContext context, Map<String, TextEditingController> option) async {
+void removeJWTToken() async {
+  const _secureStorage = FlutterSecureStorage();
+  await _secureStorage.delete(key: 'jwt-token');
+}
+
+void showLoaderDialog(BuildContext context) {
+  AlertDialog alert = AlertDialog(
+    content: Row(
+      children: [
+        const CircularProgressIndicator(),
+        Container(
+            margin: const EdgeInsets.only(left: 7.0),
+            child: const Text("Loading...")),
+      ],
+    ),
+  );
+  showDialog(
+    barrierDismissible: true,
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
+Future<bool> updatePassword(BuildContext context, String _oldPass,
+    String _newPass, String _newPassConfirm) async {
+  var _jwtToken = await getSavedJWTToken();
+  var _ipVal = await getLocalIPConfig();
+
+  http.Response response;
+  try {
+    Map<String, String> requestHeader = {'Authorization': 'Bearer $_jwtToken'};
+    response = await http.post(
+      Uri.parse('http://$_ipVal/api/auth/changepass'),
+      headers: requestHeader,
+      body: {
+        'android': 'true',
+        'oldpass': _oldPass,
+        'newpass': _newPass,
+        'newpassconfirm': _newPassConfirm,
+      },
+    );
+    if (response.statusCode == 200) {
+      // Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              "Perubahan Password Berhasil, silahkan login ulang untuk menggunakan password baru")));
+      return true;
+    } else {
+      var _result = jsonDecode(response.body);
+      // Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: ${_result['messages']['error']}")));
+      return false;
+    }
+  } catch (e) {
+    // Navigator.pop(context);
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text("Error: ${e.toString()}")));
+  }
+  //to be continued
+  return false;
+}
+
+Future<Map<String, dynamic>> getDataUser(BuildContext context) async {
   var _jwtToken = await getSavedJWTToken();
   var _ipVal = await getLocalIPConfig();
   var _payload = _jwtToken.split('.')[1];
@@ -51,13 +116,13 @@ Future<Map<String, dynamic>> getDataUser(
   if (response.statusCode == 200) {
     // print(response.body);
     var result = jsonDecode(response.body);
-    if (option.isNotEmpty) {
-      TextEditingController namaUserController = option['nama_user']!;
-      TextEditingController userNameController = option['username']!;
+    // if (option.isNotEmpty) {
+    //   TextEditingController namaUserController = option['nama_user']!;
+    //   TextEditingController userNameController = option['username']!;
 
-      namaUserController.text = result['userdata']['nama_user'];
-      userNameController.text = result['userdata']['username'];
-    }
+    //   namaUserController.text = result['userdata']['nama_user'];
+    //   userNameController.text = result['userdata']['username'];
+    // }
     return result;
   } else {
     return <String, dynamic>{};
@@ -118,6 +183,11 @@ void loginFunc(String username, String password, BuildContext context) async {
   }
 }
 
+void logoutFunc(BuildContext context) {
+  removeJWTToken();
+  Navigator.pushNamedAndRemoveUntil(context, '/Login', (route) => false);
+}
+
 Future<List<BarangModel>> getDataBarang(BuildContext context) async {
   var _ipVal = await getLocalIPConfig();
   var response;
@@ -171,4 +241,8 @@ Future<List<BarangKeluarModel>> getDataBarangKeluar(
   } else {
     return [];
   }
+}
+
+Future<List<DetailBarangModel>> getDataDetailBarang(int idBarang) async {
+  return [];
 }

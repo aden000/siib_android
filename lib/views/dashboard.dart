@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:siib_android/connection/connection.dart';
 import 'package:siib_android/views/component/sidebar.dart';
 import 'package:http/http.dart' as http;
 import 'package:siib_android/views/template/dashboard_card.dart';
@@ -59,9 +60,7 @@ class _DashboardState extends State<Dashboard> {
         actions: [
           IconButton(
             onPressed: () {
-              _secureStorage.delete(key: 'jwt-token');
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/Login', (route) => false);
+              logoutFunc(context);
             },
             icon: const Icon(
               Icons.logout,
@@ -79,29 +78,33 @@ class _DashboardState extends State<Dashboard> {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasData) {
                 return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      DashboardMenu(
-                        icon: Icons.list_rounded,
-                        title: snapshot.data!['dashboard_data']['countBarang']
-                            .toString(),
-                        subtitle: 'Banyaknya barang yang tercatat di sistem',
-                      ),
-                      DashboardMenu(
-                        icon: Icons.archive,
-                        title: snapshot.data!['dashboard_data']
-                                ['countBarangMasuk']
-                            .toString(),
-                        subtitle: 'Banyaknya terjadi barang masuk',
-                      ),
-                      DashboardMenu(
-                        icon: Icons.unarchive,
-                        title: snapshot.data!['dashboard_data']
-                                ['countBarangKeluar']
-                            .toString(),
-                        subtitle: 'Banyaknya terjadi barang keluar',
-                      ),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 20.0, right: 20.0, top: 20.0),
+                    child: Column(
+                      children: [
+                        DashboardMenu(
+                          icon: Icons.list_rounded,
+                          title: snapshot.data!['dashboard_data']['countBarang']
+                              .toString(),
+                          subtitle: 'Banyaknya barang yang tercatat di sistem',
+                        ),
+                        DashboardMenu(
+                          icon: Icons.archive,
+                          title: snapshot.data!['dashboard_data']
+                                  ['countBarangMasuk']
+                              .toString(),
+                          subtitle: 'Banyaknya terjadi barang masuk',
+                        ),
+                        DashboardMenu(
+                          icon: Icons.unarchive,
+                          title: snapshot.data!['dashboard_data']
+                                  ['countBarangKeluar']
+                              .toString(),
+                          subtitle: 'Banyaknya terjadi barang keluar',
+                        ),
+                      ],
+                    ),
                   ),
                 );
               } else {
