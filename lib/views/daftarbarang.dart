@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:siib_android/connection/connection.dart';
 import 'package:siib_android/model/barang_model.dart';
 import 'package:siib_android/views/component/sidebar.dart';
@@ -39,7 +40,7 @@ class _DaftarBarangState extends State<DaftarBarang> {
                 },
                 decoration: InputDecoration(
                   labelText: 'Pencarian',
-                  prefixIcon: const Icon(Icons.search),
+                  prefixIcon: const Icon(FontAwesomeIcons.magnifyingGlass),
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
                           onPressed: () {
@@ -60,39 +61,63 @@ class _DaftarBarangState extends State<DaftarBarang> {
                 future: getDataBarang(context),
                 builder: (BuildContext bc,
                     AsyncSnapshot<List<BarangModel>> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done &&
-                      snapshot.hasData) {
-                    return ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (BuildContext bc, int idx) {
-                        return snapshot.data![idx].namaBarang
-                                    .toLowerCase()
-                                    .contains(_searchValue.toLowerCase()) ||
-                                snapshot.data![idx].namaKategoriBarang
-                                    .toLowerCase()
-                                    .contains(_searchValue.toLowerCase())
-                            ? InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => DetailBarang(
-                                        idBarang: snapshot.data![idx].idBarang,
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                      return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (BuildContext bc, int idx) {
+                          return snapshot.data![idx].namaBarang
+                                      .toLowerCase()
+                                      .contains(_searchValue.toLowerCase()) ||
+                                  snapshot.data![idx].namaKategoriBarang
+                                      .toLowerCase()
+                                      .contains(_searchValue.toLowerCase())
+                              ? InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => DetailBarang(
+                                          idBarang:
+                                              snapshot.data![idx].idBarang,
+                                          namaBarang:
+                                              snapshot.data![idx].namaBarang,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                                child: DashboardMenu(
-                                  icon: Icons.art_track,
-                                  title: snapshot.data![idx].namaBarang,
-                                  titleFontSize: 20.0,
-                                  subtitle:
-                                      snapshot.data![idx].namaKategoriBarang,
-                                ),
-                              )
-                            : Container();
-                      },
-                    );
+                                    );
+                                  },
+                                  child: DashboardMenu(
+                                    icon: FontAwesomeIcons.cubes,
+                                    title: snapshot.data![idx].namaBarang,
+                                    titleFontSize: 20.0,
+                                    subtitle:
+                                        snapshot.data![idx].namaKategoriBarang,
+                                  ),
+                                )
+                              : Container();
+                        },
+                      );
+                    } else {
+                      return Center(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              FontAwesomeIcons.faceSadTear,
+                              size: 40.0,
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 10.0),
+                              child: const Text(
+                                "Tidak ada data barang...",
+                                style: TextStyle(fontSize: 20.0),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                   } else {
                     return Center(
                       child: Row(

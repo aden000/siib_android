@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:siib_android/connection/connection.dart';
 
 class Login extends StatefulWidget {
@@ -52,6 +50,14 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          loginFunc(_username.text, _password.text, context);
+          showLoaderDialog(context);
+        },
+        label: const Text("Login"),
+        icon: const Icon(FontAwesomeIcons.key),
+      ),
       appBar: AppBar(
         backgroundColor: Colors.blue[400],
         title: const Text('SIIB | Login Page'),
@@ -78,17 +84,17 @@ class _LoginState extends State<Login> {
         child: Column(
           children: [
             Row(
-              children: const [
-                Expanded(
-                  flex: 6,
-                  child: Text(
-                    'Selamat Datang di SIIB',
-                    style: TextStyle(fontSize: 30.0),
+              children: [
+                Expanded(child: Image.asset('assets/images/Logo_ITATS.png')),
+                const Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'Selamat Datang di SIIB',
+                      style: TextStyle(fontSize: 25.0),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 50.0,
-                  width: 50.0,
                 ),
               ],
             ),
@@ -116,17 +122,6 @@ class _LoginState extends State<Login> {
             const SizedBox(
               height: 10.0,
             ),
-            OutlinedButton(
-              style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color?>(Colors.grey[300]),
-              ),
-              onPressed: () {
-                loginFunc(_username.text, _password.text, context);
-                showLoaderDialog(context);
-              },
-              child: const Text('LOGIN'),
-            )
           ],
         ),
       ),

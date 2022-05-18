@@ -4,6 +4,7 @@ import 'package:siib_android/views/daftarbarang.dart';
 import 'package:siib_android/views/dashboard.dart';
 // import 'package:siib_android/views/detailbarang.dart';
 import 'package:siib_android/views/login.dart';
+import 'package:siib_android/views/tambahbarangkeluar.dart';
 import 'package:siib_android/views/userinfo.dart';
 
 void main() {
@@ -17,6 +18,8 @@ void main() {
       '/UserInfo': (BuildContext context) => const UserInfo(),
       '/DaftarBarang': (BuildContext context) => const DaftarBarang(),
       '/BarangKeluar': (BuildContext context) => const BarangKeluar(),
+      '/TambahBarangKeluar': (BuildContext context) =>
+          const TambahBarangKeluar(),
 
       // For detail barang, need manually route that,
       // for more info, see daftarbarang.dart in futurebuilder

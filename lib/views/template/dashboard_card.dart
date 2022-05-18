@@ -6,15 +6,17 @@ class DashboardMenu extends StatelessWidget {
   final double titleFontSize;
   final String subtitle;
   final double subtitleFontSize;
+  final Color? iconColor;
 
-  const DashboardMenu(
-      {Key? key,
-      required this.icon,
-      required this.title,
-      this.titleFontSize = 40.0,
-      required this.subtitle,
-      this.subtitleFontSize = 14.0})
-      : super(key: key);
+  const DashboardMenu({
+    Key? key,
+    required this.icon,
+    required this.title,
+    this.titleFontSize = 40.0,
+    required this.subtitle,
+    this.subtitleFontSize = 14.0,
+    this.iconColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class DashboardMenu extends StatelessWidget {
             margin: const EdgeInsets.all(25.0),
             child: Icon(
               icon,
+              color: iconColor ?? Colors.black54,
               size: 40.0,
             ),
           ),
@@ -39,13 +42,15 @@ class DashboardMenu extends StatelessWidget {
                     title,
                     overflow: TextOverflow.fade,
                     style: TextStyle(
+                      color: Colors.black87,
                       fontSize: titleFontSize,
                     ),
                   ),
                   Text(
                     subtitle,
-                    overflow: TextOverflow.fade,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
+                      color: Colors.black54,
                       fontSize: subtitleFontSize,
                     ),
                   ),

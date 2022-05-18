@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:siib_android/connection/connection.dart';
 import 'package:siib_android/views/template/dashboard_card.dart';
-import 'package:siib_android/views/template/menu_card.dart';
 
 class Sidebar extends StatefulWidget {
   const Sidebar({Key? key}) : super(key: key);
@@ -53,36 +53,14 @@ class _SidebarState extends State<Sidebar> {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          // FutureBuilder(
-          //   future: getLocalSessionData(),
-          //   builder: (
-          //     BuildContext bc,
-          //     AsyncSnapshot<Map<String, dynamic>> snapshot,
-          //   ) {
-          //     dynamic a;
-          //     if (snapshot.connectionState == ConnectionState.done) {
-          //       // return MenuCard(
-          //       //   icon: Icons.person,
-          //       //   name: snapshot.data!['nama_user'],
-          //       //   route: '/UserInfo',
-          //       // );
-          //       a =
-          //     } else {
-          //       a = const MenuCard(
-          //         icon: Icons.person,
-          //         name: 'Loading...',
-          //       );
-          //     }
-          //     return a;
-          //   },
-          // ),
           const SizedBox(
             height: 30.0,
           ),
           InkWell(
             onTap: () => Navigator.pushNamed(context, '/UserInfo'),
             child: DashboardMenu(
-              icon: Icons.person,
+              icon: FontAwesomeIcons.userGear,
+              iconColor: Colors.lightBlueAccent[400],
               title: namaUser,
               titleFontSize: 20.0,
               subtitle: 'Buka informasi user',
@@ -91,12 +69,12 @@ class _SidebarState extends State<Sidebar> {
           ),
           ListTile(
             title: const Text('Dashboard'),
-            leading: const Icon(Icons.home_rounded),
+            leading: const Icon(FontAwesomeIcons.gauge),
             onTap: () => Navigator.popAndPushNamed(context, '/Dashboard'),
           ),
           ListTile(
             title: const Text('Daftar Barang'),
-            leading: const Icon(Icons.list),
+            leading: const Icon(FontAwesomeIcons.boxesStacked),
             onTap: () => Navigator.popAndPushNamed(context, '/DaftarBarang'),
             enabled: (role == 1 || role == 2),
           ),
@@ -111,7 +89,7 @@ class _SidebarState extends State<Sidebar> {
             alignment: Alignment.bottomCenter,
             child: ListTile(
               title: const Text('Log out / Keluar Sistem'),
-              leading: const Icon(Icons.logout),
+              leading: const Icon(FontAwesomeIcons.rightFromBracket),
               onTap: () => logoutFunc(context),
             ),
           ))

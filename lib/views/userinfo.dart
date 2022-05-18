@@ -95,92 +95,84 @@ class _UserInfoState extends State<UserInfo> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                       child: SizedBox(
-                          child: Column(
-                        children: [
-                          Card(
-                            child: Container(
-                              height: 120.0,
-                              padding: const EdgeInsets.only(
-                                left: 10.0,
-                                right: 10.0,
-                                top: 10.0,
-                                bottom: 10.0,
-                              ),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      const Text("Nama Pengguna"),
-                                      Expanded(
-                                        child: Text(
-                                          snapshot.data!['userdata']
-                                              ['nama_user'],
-                                          textAlign: TextAlign.right,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  const Divider(
-                                    color: Colors.black45,
-                                  ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      const Text("Username"),
-                                      Expanded(
-                                        child: Text(
-                                          snapshot.data!['userdata']
-                                              ['username'],
-                                          textAlign: TextAlign.right,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  const Divider(
-                                    color: Colors.black45,
-                                  ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      const Text("Akses"),
-                                      Expanded(
-                                        child: Text(
-                                          snapshot.data!['userdata']['role'] ==
-                                                  '1'
-                                              ? 'Pusat Sistem Informasi'
-                                              : snapshot.data!['userdata']
-                                                          ['role'] ==
-                                                      '2'
-                                                  ? 'Bagian Keuangan'
-                                                  : snapshot.data!['userdata']
-                                                              ['role'] ==
-                                                          '3'
-                                                      ? 'Yayasan'
-                                                      : 'Tidak Terdefinisi',
-                                          textAlign: TextAlign.right,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ],
+                        child: Column(
+                          children: [
+                            Card(
+                              child: Container(
+                                height: 120.0,
+                                padding: const EdgeInsets.only(
+                                  left: 10.0,
+                                  right: 10.0,
+                                  top: 10.0,
+                                  bottom: 10.0,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        const Text("Nama Pengguna"),
+                                        Expanded(
+                                          child: Text(
+                                            snapshot.data!['userdata']
+                                                ['nama_user'],
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    const Divider(
+                                      color: Colors.black45,
+                                    ),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        const Text("Username"),
+                                        Expanded(
+                                          child: Text(
+                                            snapshot.data!['userdata']
+                                                ['username'],
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    const Divider(
+                                      color: Colors.black45,
+                                    ),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        const Text("Akses"),
+                                        Expanded(
+                                          child: Text(
+                                            snapshot.data!['userdata']
+                                                        ['role'] ==
+                                                    '1'
+                                                ? 'Pusat Sistem Informasi'
+                                                : snapshot.data!['userdata']
+                                                            ['role'] ==
+                                                        '2'
+                                                    ? 'Bagian Keuangan'
+                                                    : snapshot.data!['userdata']
+                                                                ['role'] ==
+                                                            '3'
+                                                        ? 'Yayasan'
+                                                        : 'Tidak Terdefinisi',
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          // Card(
-                          //   child: Container(
-                          //     padding: const EdgeInsets.only(
-                          //       left: 10.0,
-                          //       right: 10.0,
-                          //     ),
-                          //     height: 50.0,
-                          //     child:
-                          //   ),
-                          // ),
-                        ],
-                      )),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
 

@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:siib_android/connection/connection.dart';
 import 'package:siib_android/views/component/sidebar.dart';
-import 'package:http/http.dart' as http;
 import 'package:siib_android/views/template/dashboard_card.dart';
 
 class Dashboard extends StatefulWidget {
@@ -15,39 +12,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  final _secureStorage = const FlutterSecureStorage();
-
-  Future<Map<String, dynamic>> getDashboardData() async {
-    var _ipVal = await _secureStorage.read(key: 'ip-config');
-    var _jwtToken = await _secureStorage.read(key: 'jwt-token');
-    var response;
-    try {
-      Map<String, String> requestHeader = {
-        'Authorization': 'Bearer $_jwtToken'
-      };
-      response = await http.post(
-        Uri.parse('http://$_ipVal/api/dashboard'),
-        headers: requestHeader,
-        body: {
-          'android': 'true',
-        },
-      ).timeout(const Duration(seconds: 10));
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Error : ' + e.toString(),
-          ),
-        ),
-      );
-    }
-    if (response.statusCode == 200) {
-      print(response.body);
-      return jsonDecode(response.body);
-    }
-    return <String, dynamic>{};
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,26 +21,27 @@ class _DashboardState extends State<Dashboard> {
         backgroundColor: Colors.blue[400],
         // leading: const Icon(Icons.home),
         title: const Text('SIIB | Dashboard'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              logoutFunc(context);
-            },
-            icon: const Icon(
-              Icons.logout,
-              semanticLabel: 'Logout',
-            ),
-          )
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       logoutFunc(context);
+        //     },
+        //     icon: const Icon(
+        //       Icons.logout,
+        //       semanticLabel: 'Logout',
+        //     ),
+        //   )
+        // ],
       ),
       body: FutureBuilder(
-          future: getDashboardData(),
+          future: getDashboardData(context),
           builder: (
             BuildContext bc,
             AsyncSnapshot<Map<String, dynamic>> snapshot,
           ) {
             if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasData) {
+              if (snapshot.hasData &&
+                  snapshot.data!['dashboard_data'] != null) {
                 return SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.only(
@@ -84,20 +49,23 @@ class _DashboardState extends State<Dashboard> {
                     child: Column(
                       children: [
                         DashboardMenu(
-                          icon: Icons.list_rounded,
+                          icon: FontAwesomeIcons.box,
+                          iconColor: Colors.lightBlue[400],
                           title: snapshot.data!['dashboard_data']['countBarang']
                               .toString(),
                           subtitle: 'Banyaknya barang yang tercatat di sistem',
                         ),
                         DashboardMenu(
-                          icon: Icons.archive,
+                          icon: Icons.archive_outlined,
+                          iconColor: Colors.green[400],
                           title: snapshot.data!['dashboard_data']
                                   ['countBarangMasuk']
                               .toString(),
                           subtitle: 'Banyaknya terjadi barang masuk',
                         ),
                         DashboardMenu(
-                          icon: Icons.unarchive,
+                          icon: Icons.unarchive_outlined,
+                          iconColor: Colors.red[400],
                           title: snapshot.data!['dashboard_data']
                                   ['countBarangKeluar']
                               .toString(),
